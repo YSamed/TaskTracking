@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Yeni Görev Ekle
+{% endblock %}
+
+{% block content %}
+
+<section class="contact_section ">
+    <div class="container-fluid">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-5">
+                <div class="form_container" style="background-color: #f8f9fa; border-radius: 30px; padding: 30px;">
+                    <h2 class="text-center mb-4" style="background-color:#ff9900; color: white; border-radius: 30px;">Yeni Görev Ekle</h2>
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-4 text-center">
+                            <label for="id_title" class="form-label" style="color: white; background-color: #7335b7; border-radius: 5px; padding: 5px 15px;">Görev Başlığı</label>
+                            <div class="input-group">
+                                {{ form.title }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4 text-center">
+                            <label for="id_title" class="form-label" style="color: white; background-color: #7335b7; border-radius: 5px; padding: 5px 15px;">Yapılacaklar</label>
+                            <div class="input-group">
+                                {{ form.description }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4 text-center">
+                            <label for="id_title" class="form-label" style="color: white;; background-color: #7335b7; border-radius: 5px; padding: 5px 15px;">Bitirme Tarihi</label>
+                            <div class="input-group">
+                                {{ form.due_date }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4  text-center">
+                            <label for="id_title" class="form-label" style="color: white; background-color: #7335b7; border-radius: 5px; padding: 3px 15px;">Kategori</label>
+                            <div class="input-group d-flex justify-content-center">
+                                {{ form.category }}
+                                <a href="{% url 'task:category_list' %}" class="btn btn-dark" style="background-color: #ff9900; border-radius: 5px; padding: 3px 15px;">Kategori Ekle</a>
+                            </div>
+                        </div>
+                        <div class="mb-4 text-center">
+                            <label for="id_project" class="form-label">Proje</label>
+                            <select name="project_id" id="id_project" class="form-select">
+                                <option value="" selected disabled>Proje seçin</option>
+                                {% for project in user_projects %}
+                                    <option value="{{ project.id }}">{{ project.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        
+                        <div class="mb-3 d-flex justify-content-center">
+                            <button type="submit" class="btn btn-success me-3" style="border-radius: 40px;">Kaydet</button>
+                        </div>
+                        <div class="mb-3 d-flex justify-content-center">
+                            <a href="{% url 'task:task_list' %}" class="btn btn-outline-danger" role="button"  style="border-radius: 40px;">İptal</a>
+                        </div>
+                                   
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

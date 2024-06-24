@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Yeni Proje Oluştur
+{% endblock %}
+
+{% block content %}
+<section class="contact_section">
+    <div class="container-fluid">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-5">
+                <div class="form_container" style="background-color: #f8f9fa; border-radius: 30px; padding: 30px;">
+                    <h2 class="text-center mb-4" style="background-color:#ff9900; color: white; border-radius: 30px;">Yeni Proje Oluştur</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-4 text-center">
+                            <label for="id_title" class="form-label">Proje Başlığı</label>
+                            <div class="input-group">
+                                <input type="text" name="title" id="id_title" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="mb-3 d-flex justify-content-center">
+                            <button type="submit" class="btn btn-success me-3" style="border-radius: 40px;">Proje Oluştur</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

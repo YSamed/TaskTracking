@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}Görev Listesi{% endblock %}
+
+{% block content %}
+<!-- Stil tanımları -->
+<style>
+  .box {
+    background-color: #f8f9fa; /* Kutu arka plan rengi */
+    transition: background-color 0.3s ease; /* Arka plan rengi için animasyon geçişi */
+    cursor: pointer; /* Farenin üstüne gelince el işareti göster */
+    color: #000; 
+  }
+  .box:hover {
+    background-color: #ff9900; /* Hover durumunda arka plan rengini değiştir */
+  }
+  .card-body p {
+    color: black; /* Kart içerisindeki metin rengi */
+  }
+</style>
+
+<!-- Bildirim mesajları -->
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Görev Listesi -->
+<section class="service_section layout_padding">
+  <div class="container">
+    <div class="heading_container">
+      <h2 class="text-center text-white">Görev Listem</h2>
+    </div>
+    <!-- Kategoriler -->
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <form method="get" class="mb-3">
+          <select name="category_id" class="form-select">
+            <option value="">Tüm Kategoriler</option>
+            {% for category in user_categories %}
+              <option value="{{ category.id }}" {% if selected_category and category.id == selected_category.id %} selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn btn-dark btn-sm" style="background-color: #ff9900;">Filtrele</button>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      {% for task in tasks %}
+      <div class="col-md-6 col-lg-3"> 
+        <div class="box" data-bs-toggle="collapse" data-bs-target="#collapseTask{{ task.pk }}" role="button" aria-expanded="false" aria-controls="collapseTask{{ task.pk }}" data-aos="fade-up" data-aos-duration="1000">
+          <div class="detail-box">
+            <!-- Görev başlığı -->
+            <h5 style="text-transform: uppercase;">{{ task.title }}</h5>
+            <!-- Görev açıklaması -->
+            <div class="collapse" id="collapseTask{{ task.pk }}">
+              <div class="card card-body">
+                <p><strong>Yapılacaklar:</strong></p>
+                <div class="text-center" style="color: #000;">
+                  <ul>
+                    {% for item in task.description.splitlines %}
+                      <li>{{ item }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Detayları gör butonu -->
+          <div class="text-center mt-3">
+            <a href="{% url 'task:task_detail' task.pk %}" class="btn btn-dark" style="background-color: #ff9900;">Detayları Gör</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Yeni görev ekleme butonu -->
+<div class="text-center mt-3">
+  <button type="button" class="btn" style="background-color: #ff9900;" data-bs-toggle="modal" data-bs-target="#taskModal">Yeni Görev Ekle</button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel">Yeni Proje</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="taskForm" method="post" action="{% url 'task:task_create' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="taskTitle" class="form-label">Görev Başlığı</label>
+            <input type="text" class="form-control" id="taskTitle" name="title" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+        <button type="submit" class="btn btn-primary" form="taskForm">Kaydet</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Kategori Listesi{% endblock %}
+
+{% block content %}
+
+<section class="contact_section">
+    <div class="container-fluid">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-5" >
+                <div class="form_container" style="background-color: #f8f9fa; border-radius: 30px; padding: 30px;">
+                    <h2 class="text-center mb-4" style="background-color:#ff9900; color: aliceblue; border-radius: 30px;">Yeni Kategori Ekle</h2>
+                    <!-- Kullanıcıya mevcut kategorileri listele -->
+                    <div class="box-body " style="padding-top: 5px;">
+                        <ul class="list-group">
+                            {% for category in user_categories %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center " style="border-radius: 20px; max-height: 105px;">
+                                {{ category.name }}
+                                <form action="{% url 'task:category_list' %}" method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="category_id" value="{{ category.id }}">
+                                    <button type="submit" class="btn btn-danger btn-sm" style="border-radius: 20px;" onclick="return confirm('Kategoriyi silmek istediğinize emin misiniz?')">Sil</button>
+                                </form>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- Yeni kategori ekleme formu -->
+                    <div class="text-center" style="padding-top: 10px;">
+                        <form action="{% url 'task:category_create' %}" method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <!-- Kaydet ve İptal butonları -->
+                            <div class="mb-3 d-flex justify-content-center ">
+                                <button type="submit" class="btn btn-success me-3" style="border-radius: 40px;">Kaydet</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="mb-3 d-flex justify-content-center">
+                        <a href="{% url 'task:task_list' %}" class="btn btn-outline-danger" role="button"  style="border-radius: 40px;">İptal</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

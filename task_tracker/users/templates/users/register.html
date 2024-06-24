@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %} Kayıt Ol {% endblock title %}
+{% block content %}
+<!-- Bildirim mesajları -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Kayıt formu bölümü -->
+    <section class="contact_section layout_padding">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-md-5 col-lg-4">
+                    <div class="form_container">
+                        <div class="heading_container text-center">
+                            <h2 style="color: white;">Hesap Oluştur</h2>
+                        </div>
+                        <!-- Kayıt formu -->
+                        <form method="POST">
+                            {% csrf_token %}
+                            <!-- İsim ve Soyisim alanları -->
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="small mb-1" style="color: white;">Ad</label>
+                                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Ad" required style="background-color: white; border-radius: 30px;">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="small mb-1" style="color: white;">Soyad</label>
+                                        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Soyad" required style="background-color: white; border-radius: 30px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Kullanıcı adı ve E-posta alanları -->
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="small mb-1" style="color: white;">Kullanıcı Adı</label>
+                                        <input type="text" class="form-control" id="username" name="username" placeholder="Kullanıcı Adı" required style="background-color: white; border-radius: 30px;">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="small mb-1" style="color: white;">E-posta</label>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="E-posta" required style="background-color: white; border-radius: 30px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Şifre ve Şifre Onayla alanları -->
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="small mb-1" style="color: white;">Şifre</label>
+                                        <input type="password" class="form-control" id="password1" name="password1" placeholder="Şifre" required style="background-color: white; border-radius: 30px;">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="small mb-1" style="color: white;">Şifreyi Onayla</label>
+                                        <input type="password" class="form-control" id="password2" name="password2" placeholder="Şifreyi Onayla" required style="background-color: white; border-radius: 30px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Kayıt ol butonu -->
+                            <div class="form-group mt-4 mb-0">
+                                <button type="submit" class="col-md-12 btn btn-dark" style="background-color: white; border-radius: 30px; color: #343a40;">Kayıt Ol</button>
+                            </div>
+                        </form>
+                        <!-- Giriş yap linki -->
+                        <div class="text-center mt-3">
+                            <a href="{% url 'users:login' %}" class="btn btn-dark" style="background-color:#ff9900; border-radius: 30px; font-size: 14px;">Zaten hesabınız var mı? Giriş yapın</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Kayıt formu bölümü sonu -->
+{% endblock content %}

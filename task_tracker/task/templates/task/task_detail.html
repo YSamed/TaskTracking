@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Task Detail
+{% endblock %}
+
+{% block content %}
+<section class="contact_section">
+    <div class="container-fluid">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-5">
+                <div class="form_container" style="background-color: #f8f9fa; border-radius: 30px; padding: 30px;">
+                    <h2 class="text-center mb-4" style="background-color:#ff9900; color: white; border-radius: 30px; text-transform: uppercase;">{{ task.title }}</h2>
+                    <div class="mb-4 text-center">
+                        <label class="form-label" style="color: white; background-color: #7335b7; border-radius: 5px; padding: 5px 15px;">Kategori</label>
+                        <div class="text-center">
+                            {{ task.category }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4 text-center">
+                        <label class="form-label" style="color: white; background-color: #7335b7; border-radius: 5px; padding: 5px 15px;">Yapılacaklar</label>
+                        <div class="text-center">
+                            <ul>
+                                {% for item in task.description.split %}
+                                    <li>{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 text-center">
+                        <label class="form-label" style="color: white; background-color: #7335b7; border-radius: 5px; padding: 5px 15px;">Başlangıç Tarihi - Bitiş Tarihi</label>
+                        <div class="text-center">
+                            {{ task.created_at }} - {{ task.due_date }}
+                        </div>
+                    </div>
+
+                    <form method="post" action="{% url 'task:task_delete' task.id %}">
+                        {% csrf_token %}
+                        <!-- Görev tamamlandı butonu -->
+                        <div class="mb-3 d-flex justify-content-center">
+                            <button type="submit" class="btn btn-success me-3" style="border-radius: 40px;">Görev Tamamlandı</button>
+                        </div>
+                    </form>
+                    <div class="mb-3 d-flex justify-content-center">
+                        <a href="{% url 'task:task_list' %}" class="btn btn-outline-danger" role="button" style="border-radius: 40px;">İptal</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

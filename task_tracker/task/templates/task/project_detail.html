@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% block title %}Proje Detay{% endblock %}
+
+{% block content %}
+<!-- Stil tanımları -->
+<style>
+  .box {
+    background-color: #f8f9fa;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    color: #000;
+  }
+  .box:hover {
+    background-color: #ff9900;
+  }
+  .card-body p {
+    color: black;
+  }
+</style>
+
+<!-- Bildirim mesajları -->
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Proje ve Görev Detayları -->
+<section class="service_section layout_padding">
+  <div class="container">
+    <div class="heading_container">
+      <h2 class="text-center text-white">{{ project.title }}</h2>
+      <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProjectModal">Proje Adını Düzenle</button>
+      <form method="post" action="{% url 'task:project_delete' project.pk %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Projeyi Sil</button>
+      </form>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <form method="get" class="mb-3">
+          <select name="category_id" class="form-select">
+            <option value="">Tüm Kategoriler</option>
+            {% for category in user_categories %}
+              <option value="{{ category.id }}" {% if selected_category and category.id == selected_category.id %} selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn btn-dark btn-sm" style="background-color: #ff9900;">Filtrele</button>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      {% for task in tasks %}
+      <div class="col-md-6 col-lg-3"> 
+        <div class="box" data-bs-toggle="collapse" data-bs-target="#collapseTask{{ task.pk }}" role="button" aria-expanded="false" aria-controls="collapseTask{{ task.pk }}" data-aos="fade-up" data-aos-duration="1000">
+          <div class="detail-box">
+            <h5 style="text-transform: uppercase;">{{ task.title }}</h5>
+            <div class="collapse" id="collapseTask{{ task.pk }}">
+              <div class="card card-body">
+                <p><strong>Yapılacaklar:</strong></p>
+                <div class="text-center" style="color: #000;">
+                  <ul>
+                    {% for item in task.description.splitlines %}
+                      <li>{{ item }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-3">
+            <a href="{% url 'task:task_detail' task.pk %}" class="btn btn-dark" style="background-color: #ff9900;">Detayları Gör</a>
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editTaskModal{{ task.pk }}">Düzenle</button>
+            <form method="post" action="{% url 'task:task_delete' task.pk %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Sil</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Görev Düzenleme Modal -->
+      <div class="modal fade" id="editTaskModal{{ task.pk }}" tabindex="-1" aria-labelledby="editTaskModalLabel{{ task.pk }}" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editTaskModalLabel{{ task.pk }}">Görev Düzenle</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="editTaskForm{{ task.pk }}" method="post" action="{% url 'task:task_edit' task.pk %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <label for="taskTitle" class="form-label">Görev Başlığı</label>
+                  <input type="text" class="form-control" id="taskTitle" name="title" value="{{ task.title }}" required>
+                </div>
+                <div class="mb-3">
+                  <label for="taskDescription" class="form-label">Görev Açıklaması</label>
+                  <textarea class="form-control" id="taskDescription" name="description" rows="3">{{ task.description }}</textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="taskDueDate" class="form-label">Son Tarih</label>
+                  <input type="date" class="form-control" id="taskDueDate" name="due_date" value="{{ task.due_date|date:'Y-m-d' }}">
+                </div>
+                <div class="mb-3">
+                  <label for="taskCategory" class="form-label">Kategori</label>
+                  <select class="form-select" id="taskCategory" name="category">
+                    <option value="">Seçiniz</option>
+                    {% for category in user_categories %}
+                      <option value="{{ category.id }}" {% if task.category and task.category.id == category.id %} selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="taskProject" class="form-label">Proje</label>
+                  <select class="form-select" id="taskProject" name="project">
+                    {% for proj in user_projects %}
+                      <option value="{{ proj.id }}" {% if task.project and task.project.id == proj.id %} selected{% endif %}>{{ proj.title }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+              <button type="submit" class="btn btn-primary" form="editTaskForm{{ task.pk }}">Kaydet</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Yeni görev ekleme butonu -->
+<div class="text-center mt-3">
+  <button type="button" class="btn" style="background-color: #ff9900;" data-bs-toggle="modal" data-bs-target="#taskModal">Yeni Görev Ekle</button>
+</div>
+
+<!-- Yeni Görev Ekleme Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel">Yeni Görev</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="taskForm" method="post" action="{% url 'task:project_detail' project.pk %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="taskTitle" class="form-label">Görev Başlığı</label>
+            <input type="text" class="form-control" id="taskTitle" name="title" required>
+          </div>
+          <div class="mb-3">
+            <label for="taskDescription" class="form-label">Görev Açıklaması</label>
+            <textarea class="form-control" id="taskDescription" name="description" rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="taskDueDate" class="form-label">Son Tarih</label>
+            <input type="date" class="form-control" id="taskDueDate" name="due_date">
+          </div>
+          <div class="mb-3">
+            <label for="taskCategory" class="form-label">Kategori</label>
+            <select class="form-select" id="taskCategory" name="category">
+                <option value="">Seçiniz</option>
+                {% for category in user_categories %}
+                  <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+          <button type="submit" class="btn btn-primary" form="taskForm">Kaydet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Proje Düzenleme Modal -->
+<div class="modal fade" id="editProjectModal" tabindex="-1" aria-labelledby="editProjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProjectModalLabel">Proje Adını Düzenle</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editProjectForm" method="post" action="{% url 'task:project_edit' project.pk %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="projectTitle" class="form-label">Proje Adı</label>
+              <input type="text" class="form-control" id="projectTitle" name="title" value="{{ project.title }}" required>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+              <button type="submit" class="btn btn-primary">Kaydet</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  {% endblock %}
+  

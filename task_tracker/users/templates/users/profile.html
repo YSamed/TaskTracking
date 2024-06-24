@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profil Sayfası{% endblock title %}
+{% block content %}
+
+    <!-- Bildirim mesajları -->
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    
+<!-- Profil formu bölümü -->
+<section class="contact_section ">
+  <div class="container-fluid">
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-5">
+        <div class="form_container" style="background-color: #f8f9fa; border-radius: 30px; padding: 30px;">
+          <h2 class="text-center mb-1" style="background-color:#ff9900; color: white; border-radius: 30px;">Profilim</h2>
+        <div class="form_container">
+          <!-- Profil güncelleme formu -->
+          <form method="POST" enctype="multipart/form-data" style="background-color: #fff; border-radius: 30px; padding: 5px;">
+            {% csrf_token %}
+
+            <!-- Kullanıcı adı alanı -->
+            <div class="mb-2 mt-1">
+              <label for="id_title" class="form-label" style="color: white; background-color: #7335b7; border-radius: 5px; padding: 5px 15px;">Kullanıcı Adı</label>
+              <div class="input-group">
+                {{ user_form.username }}
+              </div>
+            </div>
+
+            <!-- E-posta alanı -->
+            <div class="mb-2 mt-1">
+              <label for="id_title" class="form-label" style="color: white; background-color: #7335b7; border-radius: 5px; padding: 5px 15px;">E-posta</label>
+              <div class="input-group">
+                {{ user_form.email }}
+              </div>
+
+            <!-- Ad alanı -->
+            <div class="mb-2 mt-1">
+              <label for="id_title" class="form-label" style="color: white; background-color: #7335b7; border-radius: 5px; padding: 5px 15px;">Ad</label>
+              <div class="input-group">
+                {{ user_form.first_name }}
+              </div>
+            
+            <!-- Soyad alanı -->
+            <div class="mb-2 mt-1 ">
+              <label for="id_title" class="form-label" style="color: white; background-color: #7335b7; border-radius: 5px; padding: 5px 15px;">Soyad</label>
+              <div class="input-group">
+                {{ user_form.last_name }}
+              </div>
+       
+            <!-- Güncelleme ve çıkış butonları -->
+            <div class="text-center mt-2">
+              <button type="submit" class="btn btn-success" style="border-radius: 30px;">Güncelle</button>
+            </div>
+          </form>
+        </div>
+            <div class="mb-3 d-flex justify-content-center">
+              <a href="{% url 'users:logout' %}" class="btn btn-outline-danger" role="button"  style="border-radius: 40px;">Çıkış Yap</a>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Profil formu bölümü sonu -->
+
+{% endblock content %}

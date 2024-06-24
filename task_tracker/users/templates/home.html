@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Giriş Sayfası{% endblock title %}
+
+{% block content %}
+
+    <!-- Bildirim mesajları -->
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+<div class="hero_area">
+  <!-- slider section -->
+  <section class="slider_section ">
+    <div id="customCarousel1" class="carousel slide" data-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="container ">
+            <div class="row">
+              <!-- Sol taraftaki resim -->
+              <div class="col-md-6">
+                <div class="img-box">
+                  <img src="{% static 'images/slider-img.png' %}" alt="">
+                </div>
+              </div>
+              <!-- Sağ taraftaki detaylar -->
+              <div class="col-md-6">
+                <div class="detail-box">
+                  <!-- Kullanıcı giriş yapmışsa hoşgeldin mesajı göster -->
+                  {% if user.is_authenticated %}
+                    <h2 style="background-color: #ff9900; border-radius: 10px; font-size: xx-large; ">Hoş geldin {{ user.first_name }}</h2>
+                  {% endif %}
+                  <br>
+                  <!-- Başlık -->
+                  <h1>
+                    Yapmayı Unutma !
+                  </h1>
+                  <!-- Açıklama -->
+                  <p>
+                    Görev listelerini oluşturarak yapman gerekenleri unutmadan kolay bir şekilde takip et .
+                  </p>
+                  <!-- Giriş yap veya görev ekle butonu -->
+                  <div class="btn-box">
+                    {% if user.is_authenticated %}
+                      <a class="btn1" href="{% url 'task:task_create' %}" class="nav-link">Görev Ekle </a>
+                    {% else %}
+                      <a class="btn1" href="{% url 'users:login' %}" class="nav-link">Giriş Yap</a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- end slider section -->
+</div>
+{% endblock content %}
